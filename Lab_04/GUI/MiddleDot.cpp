@@ -4,8 +4,6 @@
 
 void MiddleDot::DrawCicrle(QImage& canvas, int x, int y, int r, unsigned int color)
 {
-	//  int l = ceilf(r * M_SQRT1_2); // 1 / √2
-	
 	int i = 0, j = r;
 	// t = x^2 + y^2 - r^2
 	// t(1, r-1/2.)
