@@ -168,8 +168,6 @@ void MiddleDot::TestDrawEllipse(QImage& canvas, int x, int y, int a, int b)
 	// tпр = b^2*x^2 + a^2*y^2 - a^2 * b^2;
 	// начальное значение средней точки M(1, b-1/2.)
 	float t = a2 / 4. - a2 * b + b2;
-	float dt = 0;
-	float dy = -ad;
 
 	// Производная при y'= -1 , является границей для оптимального рисования
 	// y'= -b^2/a^2 * x/y

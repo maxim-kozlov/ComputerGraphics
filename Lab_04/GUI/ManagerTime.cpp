@@ -159,7 +159,7 @@ void ManagerTime::ShowTimeEllipse(int a, int b, int dr, int n, int countRepetiti
 
 	QValueAxis* axisX = new QValueAxis;
 	axisX->setLabelFormat("%d");
-	axisX->setTitleText("R");
+	axisX->setTitleText("a");
 	chart->addAxis(axisX, Qt::AlignBottom);
 
 

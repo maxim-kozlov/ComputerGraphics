@@ -33,10 +33,8 @@ void Breshenham::DrawCicrle(QImage& canvas, int x, int y, int r, unsigned int co
 	int r2 = r * r;
 	int d = 2 * (1 - r); // первоначальная ошибка
 
-	int lx = ceilf(r * M_SQRT1_2); // 1 / √2
-
 	int i = 0, j = r;
-	while (i < lx)
+	while (i < j)
 	{
 		canvas.setPixel(x + i, y + j, color);
 		canvas.setPixel(x + i, y - j, color);
@@ -153,10 +151,10 @@ void Breshenham::TestDrawCicrle(QImage& canvas, int x, int y, int r)
 	int r2 = r * r;
 	int d = 2 * (1 - r); // первоначальная ошибка
 
-	int lx = ceilf(r * M_SQRT1_2); // 1 / √2
+	// int lx = ceilf(r * M_SQRT1_2); // 1 / √2
 
 	int i = 0, j = r;
-	while (i < lx)
+	while (i < j)
 	{
 		if (d == 0) // диагональная точка лежит на окружности
 			DiagonalStepCicrle(i, j, d);

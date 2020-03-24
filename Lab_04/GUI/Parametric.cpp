@@ -22,6 +22,13 @@ void Parametric::DrawCicrle(QImage& canvas, int x, int y, int r, unsigned int co
 		canvas.setPixel(x - j, y + i, color);
 		canvas.setPixel(x - j, y - i, color);
 	}
+	// t = pi/4
+	i = roundf(r * M_SQRT1_2);
+	j = i;
+	canvas.setPixel(x + i, y + j, color);
+	canvas.setPixel(x + i, y - j, color);
+	canvas.setPixel(x - i, y + j, color);
+	canvas.setPixel(x - i, y - j, color);
 }
 
 void Parametric::DrawEllipse(QImage& canvas, int x, int y, int a, int b, unsigned int color)
@@ -59,7 +66,7 @@ void Parametric::TestDrawCicrle(QImage& canvas, int x, int y, int r)
 {
 	float step = 1 / (float)r;
 	int i, j;
-	for (float t = 0; t < M_PI_4; t += step)
+	for (float t = 0; t < M_PI_4 + step / 2; t += step)
 	{
 		i = roundf(r * cosf(t));
 		j = roundf(r * sinf(t));
