@@ -60,15 +60,18 @@ double GetTimeCircle(IDeterminateTime* painter, QImage& image, int r, int countR
 {
 	double time = 0;
 	double fTimeStart, fTimeStop;
-	for (int j = 0; j < countRepetitions; j++)
+
+	int n = 0;
+	for (int j = 0; j < countRepetitions && time < 10; j++)
 	{
 		fTimeStart = clock();
 		painter->TestDrawCicrle(image, r, r, r);
 		fTimeStop = clock();
 
 		time += fTimeStop - fTimeStart;
+		n++;
 	}
-	time /= countRepetitions;
+	time /= n;
 	return time;
 }
 
@@ -76,15 +79,17 @@ double GetTimeEllipse(IDeterminateTime* painter, QImage& image, int a, int b, in
 {
 	double time = 0;
 	double fTimeStart, fTimeStop;
-	for (int j = 0; j < countRepetitions; j++)
+	int n = 0;
+	for (int j = 0; j < countRepetitions && time < 10; j++)
 	{
 		fTimeStart = clock();
 		painter->TestDrawEllipse(image, a, b, a, b);
 		fTimeStop = clock();
 
 		time += fTimeStop - fTimeStart;
+		n++;
 	}
-	time /= countRepetitions;
+	time /= n;
 	return time;
 }
 

@@ -29,10 +29,10 @@ MainWindow::MainWindow(QWidget* parent)
 	ui->horizontalLayoutTimeEllipse->addWidget(chartViewTimeEllipse);
 
 	ManagerTime managerTimeCircle(chartViewTimeCircle);
-	managerTimeCircle.ShowTimeCircle(10, 1000, 50, 10);
+	managerTimeCircle.ShowTimeCircle(50, 500, 20, 10);
 
 	ManagerTime managerTimeEllipse(chartViewTimeEllipse);
-	managerTimeEllipse.ShowTimeEllipse(10, 5, 1000, 50, 10);
+	managerTimeEllipse.ShowTimeEllipse(100, 50, 500, 20, 10);
 
 	manager->ClearCanvas();
 	ShowCanvas();
