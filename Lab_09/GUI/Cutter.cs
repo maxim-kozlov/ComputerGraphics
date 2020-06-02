@@ -75,79 +75,84 @@ namespace GUI
             return new PointF[2] { newA, newB };
         }
 
-        // Получить напрвление обхода
-        // 1 = против часовой
-        // 0 = мн-к невыпуклый
-        // -1 = по часовой стрелке
-        private int GetRoundDirection()
+        public List<PointF> Cut(List<Point> polygon)
         {
-            if (points.Count < 3)
-                return 0;
+            List<PointF> cuttedPolygon = new List<PointF>();
+            foreach (var points in polygon)
+                cuttedPolygon.Add(points);
+            cuttedPolygon.Add(cuttedPolygon.First());
 
-            Vector A = new Vector(points.Last(), points.First());
+            List<PointF> tempPolygon = new List<PointF>();
 
-            int sign = 0;
-
-            for (int i = 0; i < points.Count; i++)
+            PointF? I;
+            // по всем сторонам отсекателя
+            for (int i = 0; i < Points.Count(); i++)
             {
-                var B = new Vector(points[i], points[(i + 1) % points.Count]);
-                int res = Math.Sign(Vector.Multiplication(A, B));
-
-                if (res != 0)
+                // по всем сторонам многоугольника
+                for (int j = 1; j < cuttedPolygon.Count(); j++)
                 {
+                    I = GetPointIntersection(cuttedPolygon[j - 1], cuttedPolygon[j], i);
+                    if (I.HasValue)
+                        tempPolygon.Add(I.Value);
 
-                    if (sign == 0)
-                        sign = res;
-                    else if (sign != res)
-                        return 0;
+                    if (IsVisible(cuttedPolygon[j], i))
+                        tempPolygon.Add(cuttedPolygon[j]);
                 }
-                A = B;
+
+                if (tempPolygon.Count() == 0)
+                    return null;
+
+                I = GetPointIntersection(cuttedPolygon.First(), cuttedPolygon.Last(), i);
+                if (I.HasValue)
+                    tempPolygon.Add(I.Value);
+
+                tempPolygon.Add(tempPolygon.First());
+                cuttedPolygon.Clear();
+                cuttedPolygon.AddRange(tempPolygon);
+                tempPolygon.Clear();
             }
-            return sign;
+            return cuttedPolygon;
         }
 
-        private Vector[] GetNormals(int direction)
+        private bool IsVisible(PointF point, int i)
         {
-            var normals = new Vector[points.Count];
+            var W = new Vector(Points[i], point);
+            var WScalar = Vector.Scalar(W, Normals[i]);
+            return WScalar >= 0;
+        }
 
-            Vector N;
-            float temp;
-            for (int i = 0; i < Points.Count - 1; i++)
+        private PointF? GetPointIntersection(PointF V0, PointF V1, int i)
+        {
+            // директриса текущего отрезка
+            Vector D = new Vector(V0, V1);
+            var DScalar = Vector.Scalar(D, Normals[i]);
+
+            if (DScalar != 0) // Провека, что не точка и не парралельно
             {
-                N = new Vector(points[i], points[i + 1]);
-
-                // Nx = -Vy; Ny = Vx
-                // (N, V) = Nx*Vx + Ny*Vy = -Vy*Vx + Vx*Vy = 0
-                temp = N.X;
-                N.X = -N.Y;
-                N.Y = temp;
-
-                if (direction == -1)
-                    N.Negative();
-                normals[i] = N;
+                var W = new Vector(Points[i], V0);
+                var WScalar = Vector.Scalar(W, Normals[i]);
+                float t = -WScalar / DScalar;
+                if (t >= 0 && t <= 1)  // заменить проверку на проверку знаков видимости точек
+                {
+                    PointF I = new PointF();
+                    I.X = V0.X + D.X * t;
+                    I.Y = V0.Y + D.Y * t;
+                    return I;
+                }
             }
 
-            N = new Vector(points.Last(), points.First());
-            temp = N.X;
-            N.X = -N.Y;
-            N.Y = temp;
-
-            if (direction == -1)
-                N.Negative();
-            normals[Points.Count - 1] = N;
-
-            return normals;
+            return null;
         }
 
         // если мн-к не выпуклый будет брошено исключение NoConvexCutterException
         private void SetPoints(List<Point> points)
         {
-            this.points = points;
-            int direction = GetRoundDirection();
+            int direction = ManagerMath.GetRoundDirection(points);
             if (direction == 0)
                 throw new NoConvexCutterException();
 
-            Normals = GetNormals(direction);
+            Normals = ManagerMath.GetNormals(points, direction);
+            this.points = points;
         }
     }
 }
